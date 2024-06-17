@@ -4,7 +4,7 @@ import { inputMiddleware, userMiddleware, signinMiddleware, authMiddleware } fro
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv"
 import {Tweet, User} from "../db"
-import { StringSchemaDefinition } from "mongoose";
+
 
 dotenv.config();
 
@@ -67,6 +67,25 @@ router.post("/tweet", authMiddleware, async(req, res)=>{
         msg: 'tweet created sucessfully'
     })
     
+})
+
+router.get('/bulk', authMiddleware, async(req, res)=>{
+    const page = parseInt(req.query.page as string) ||  1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    try{
+        const tweets = await Tweet.find({})
+        .skip((page - 1)* limit)
+        .limit(limit)
+        .exec()
+        res.status(200).json({
+            tweets
+        })
+    }
+    catch(err){
+        return res.status(500).json({
+            msg : err
+        })
+    }
 })
 
 export default router;
