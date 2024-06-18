@@ -145,4 +145,30 @@ router.put("/edit/:id", authMiddleware, async(req, res)=>{
     })
 })
 
+router.delete("/delete/:id", authMiddleware, async(req, res)=>{
+
+    const twitterId = req.params.id;
+    const getUser = await Tweet.findById(twitterId)
+    if(!getUser){
+        return res.status(403).json({
+            msg: 'user not found'
+        })
+    }
+    const user = (getUser.user).toString()
+    if(user !== req.userId){
+        return res.status(401).json({
+            msg: "can't delete tweet"
+        })
+    }
+    const success = await Tweet.deleteOne({_id: twitterId})
+    if(!success){
+        return res.status(403).json({
+            msg: "Can't delete tweet"
+        })    
+    }
+    res.status(200).json({
+        msg: "Tweet Deleted Successfully"
+    })
+})
+
 export default router;
