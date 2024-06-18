@@ -88,4 +88,61 @@ router.get('/bulk', authMiddleware, async(req, res)=>{
     }
 })
 
+router.get('/profile', authMiddleware, async(req, res)=>{
+
+    try{
+        const { email } = req.query;
+        if(!email){
+            return res.status(403).json({
+                msg: "email not found"
+            })
+        }
+        const userTweet = await User.findOne({email});
+        if(!userTweet){
+            return res.status(403).json({
+                msg: "user not found"
+            })
+        }
+        const user = userTweet._id
+        const tweets = await Tweet.find({user}).limit(10);
+        res.status(200).json({
+            tweets
+        })
+    }
+    catch(err){
+        return res.status(403).json({
+            msg: err
+        })
+    }
+})
+
+router.put("/edit/:id", authMiddleware, async(req, res)=>{
+    const tweetId = req.params.id;
+    const getUser = await Tweet.findById(tweetId)
+    if(!getUser){
+        return res.status(403).json({
+            msg: 'user not found'
+        })
+    }
+    const user = (getUser.user).toString()
+    if(user !== req.userId){
+        return res.status(401).json({
+            msg: "can't edit"
+        })
+    }
+    const content = req.body.content;
+    const success = await Tweet.updateOne(
+        {_id: tweetId},
+        {content: content}
+    )
+    if(!success){
+        return res.status(401).json({
+            msg: 'cant update the tweet'
+        })
+    }
+    res.status(200).json({
+        msg: "updated tweet"
+    })
+})
+
 export default router;

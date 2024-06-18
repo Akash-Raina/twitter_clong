@@ -1,9 +1,8 @@
 import express from "express"
 const router = express.Router();
 import {authMiddleware } from "../middleware";
-import {Tweet, User} from "../db"
+import {Like, Tweet, User, Follow} from "../db"
 import sanitize from 'mongo-sanitize';
-
 router.get("/search", authMiddleware, async(req, res)=>{
     try{
         let { user } = sanitize(req.query);
@@ -52,5 +51,59 @@ router.get('/usertweets', authMiddleware, async(req, res)=>{
         })
     }
 })
+router.put('/like',authMiddleware, async(req, res)=>{
+    const userId = req.userId;
+    const tweetId = sanitize(req.query.tweetId);
+    if(!tweetId){
+        return res.status(401).json({
+            msg: "client side error"
+        })
+    }
+    const liked = await Like.findOne({
+        tweet:tweetId
+    })
+    if(liked){
+        return res.status(401).json({
+            msg: "already liked"
+        })
+    }
+    const likedTweet = await Like.create({
+        user: userId,
+        tweet: tweetId
+    })
 
+    if(!likedTweet){
+        return res.status(403).json({
+            msg: "client side error"
+        })
+    }
+    const result = await Tweet.updateOne(
+      { $addToSet: { likes: (userId) } }
+    );
+    if(!result){
+        return res.status(403).json({
+            msg: "cannot update right now"
+        })
+    }
+    res.status(200).json({
+        msg: "liked tweet"
+    })
+    
+})
+
+router.post("/follow", authMiddleware, async(req, res)=>{
+    const followingId = sanitize(req.query.followingId);
+    const sucess = await Follow.create({
+        follower: req.userId,
+        following: followingId
+    })
+    if(!sucess){
+        return res.status(401).json({
+            msg: 'server Sider error'
+        })
+    }
+    res.status(200).json({
+        msg: "followed successfully"
+    })
+})
 export default router;
