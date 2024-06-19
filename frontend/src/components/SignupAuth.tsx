@@ -1,6 +1,10 @@
 import { useState } from "react"
 import { Authheader } from "./Authheader"
 import { LabbeledInput } from "./LabbeledInput"
+import axios from "axios";
+import { Spinner } from "./Spinner";
+import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../config";
 
 interface SignupType{
     username: string;
@@ -8,13 +12,27 @@ interface SignupType{
     password: string;
 }
 export const SignupAuth = ({type}:{type:'signin' | 'signup'})=>{
+    const navigate = useNavigate()
+    const [loading, setLoading] = useState(false)
     const [userData, setUserData] = useState<SignupType>({
         username: "",
         email: "",
         password: ""
     })
-    function hitbackend(){
 
+    async function hitbackend(){
+
+        try{
+            setLoading(true);
+            const res = await axios.post(`${BACKEND_URL}user/signup`, userData);
+            const jwt = res.data.token;
+            localStorage.setItem("token", jwt);
+            navigate("/")
+        }
+        catch(err){
+            alert(err);
+            setLoading(false)
+        }
     }
     
 
@@ -42,7 +60,7 @@ export const SignupAuth = ({type}:{type:'signin' | 'signup'})=>{
                     })
                 }}/>
 
-                <button className="mt-5 bg-white rounded-xl w-[230px] h-8 text-black text-lg font-bold">{type == 'signup' ? 'Sign Up' : 'Sign In'}</button>
+                <button onClick={hitbackend} className="mt-5 bg-white rounded-xl w-[230px] h-8 text-black text-lg font-bold">{loading ? <Spinner/> : type == 'signup' ? 'Sign Up' : 'Sign In'}</button>
             </div>
         </div>
         

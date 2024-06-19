@@ -19,7 +19,6 @@ router.post("/signup", inputMiddleware, userMiddleware, async(req, res)=>{
         const userid = user._id;
         const token = jwt.sign({userid}, process.env.JWT_SECRET as string)
         res.status(200).json({
-            msg: "User created Sucessfully",
             token
         })
     }
@@ -39,7 +38,6 @@ router.post("/signin", signinMiddleware, async(req, res)=>{
         const userid = user?._id;
         const token = jwt.sign({userid}, process.env.JWT_SECRET as string);
         res.status(200).json({
-            msg: "signed-in successfully",
             token
         })
     }
@@ -73,12 +71,12 @@ router.get('/bulk', authMiddleware, async(req, res)=>{
     const page = parseInt(req.query.page as string) ||  1;
     const limit = parseInt(req.query.limit as string) || 10;
     try{
-        const tweets = await Tweet.find({})
+        const tweets = await Tweet.find({}).populate('user', 'username')
         .skip((page - 1)* limit)
         .limit(limit)
         .exec()
         res.status(200).json({
-            tweets
+            tweets,
         })
     }
     catch(err){
