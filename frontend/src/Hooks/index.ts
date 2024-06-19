@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../config";
 export interface bkendType{
     user: string,
     content: string,
@@ -20,7 +21,7 @@ export const useBackend = ()=>{
                 return;
             }
             try{
-                const res = await axios.get("http://localhost:3000/api/v1/user/bulk",{headers:{
+                const res = await axios.get(`${BACKEND_URL}/user/bulk`,{headers:{
                     Authorization: `Bearer ${token}`
                 }})
                 if(res && res.data){
