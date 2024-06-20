@@ -16,7 +16,7 @@ export const Home = ()=>{
         </div>
     }
     
-    return <div className="bg-black w-screen h-screen text-white flex justify-between">
+    return <div className="bg-black w-full h-full text-white flex justify-between">
         <Navbar/>
         <div className="w-[50%]">
             <Header/>

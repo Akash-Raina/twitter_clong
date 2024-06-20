@@ -5,20 +5,14 @@ import axios from "axios"
 import { Spinner } from "./Spinner";
 import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../config";
-
-interface SigninType{
-    email: string;
-    password: string;
-}
+import { SubmitHandler, useForm } from "react-hook-form";
+import { userSigningType } from "./UserSigning";
 export const SigninAuth = ({type}:{type:'signin' | 'signup' })=>{
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false);
-    const [userData, setUserData] = useState<SigninType>({
-        email: "",
-        password: ""
-    })
+    const {register, handleSubmit, formState:{ errors }} = useForm<userSigningType>()
 
-    async function hitbackend(){
+    const onSubmit:SubmitHandler<userSigningType> = async(userData)=>{
      
         try{
             setLoading(true);
@@ -39,23 +33,29 @@ export const SigninAuth = ({type}:{type:'signin' | 'signup' })=>{
     return <div className="w-screen h-screen bg-black flex justify-center">
         <div className="w-[80%] flex flex-col mt-10">
             <Authheader type = {type}/>
-            <div className="mt-10 flex flex-col gap-6 items-center">
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-10 flex flex-col gap-6 items-center">
 
-                <LabbeledInput label="Email" placeholder="akash@gmail.com" onchange={(e)=>{
-                    setUserData({
-                        ...userData,
-                        email: e.target.value
-                    })
-                }}/>
-                <LabbeledInput label="Password" type = "password" placeholder="*******" onchange={(e)=>{
-                    setUserData({
-                        ...userData,
-                        password: e.target.value
-                    })
-                }}/>
+                <LabbeledInput 
+                    label="Email" 
+                    placeholder="akash@gmail.com" 
+                    register={register} 
+                    name="email" 
+                    validation={{ required: "*email is required" }}
+                />
+                {errors.email? <span className="text-red-500">{errors.email.message}</span>: ""}
+                
+                <LabbeledInput 
+                    label="Password" 
+                    type = "password" 
+                    placeholder="*******" 
+                    register={register} 
+                    name="password"
+                    validation={{ required: "*password is required  " }}
+                /> 
+                {errors.password && <span className="text-red-500">{errors.password.message}</span>}
 
-                <button onClick={hitbackend} className="mt-5 bg-white rounded-xl w-[230px] h-8 text-black text-lg font-bold">{loading ? <Spinner/> : type == 'signup' ? 'Sign Up' : 'Sign In'}</button>
-            </div>
+                <button type="submit" className="mt-5 bg-white rounded-xl w-[230px] h-8 text-black text-lg font-bold">{loading ? <Spinner/> : type == 'signup' ? 'Sign Up' : 'Sign In'}</button>
+            </form>
         </div>
 
     </div>
