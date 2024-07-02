@@ -12,6 +12,7 @@ interface Tweet {
 }
 export const AllTweets = ({userData}:{userData:Tweet[]})=>{
 
+
     return <div>
         {userData.map((data) =>
             <div className="flex flex-col gap-3 border-b border-[#657786]">
@@ -25,7 +26,7 @@ export const AllTweets = ({userData}:{userData:Tweet[]})=>{
                 </div>
 
                 <div className="flex gap-3 justify-end pr-10 cursor-pointer pb-5">
-                    <FaRegHeart size={23}/>
+                    <FaRegHeart size={23} className="hover:text-red-700"/>
                     <div>{data.likes.length}</div>
                 </div>
             </div>

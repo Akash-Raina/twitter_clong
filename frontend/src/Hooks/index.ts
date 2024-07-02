@@ -46,3 +46,45 @@ export const useBackend = ()=>{
         bkend
     }
 }
+
+export const getProfile = ()=>{
+    console.log("inside getProfile");
+    const navigate = useNavigate();
+    const [username, setUsername] = useState("");
+        useEffect(()=>{
+        const hitbackend= async()=>{
+            console.log("inside useeffect")
+            const token = localStorage.getItem("token");
+            if(!token){
+                navigate("/signin");
+                return;
+            }
+            try{
+                const res = await axios.get(`${BACKEND_URL}/user/profile`,{headers:{
+                    Authorization: `Bearer ${token}`
+                }})
+                if(res && res.data){
+                    if(res.data.tweets.length === 0){
+                        setUsername("A")
+                    }
+                    else{
+                        setUsername(res.data.tweets[0].user.username);
+                    }
+                    
+                }
+                else{
+                    navigate('/signin')
+                }
+            }
+            catch(err){
+                console.error(err) 
+                navigate("/signin")
+            }
+        }
+        hitbackend()
+    }, [])
+
+    return{
+        username
+    }
+}

@@ -1,4 +1,4 @@
-import { useBackend } from "../Hooks"
+import { getProfile, useBackend } from "../Hooks"
 import { AllTweets } from "../components/AllTweets";
 import { CreateTweet } from "../components/CreateTweet";
 import { Header } from "../components/Header";
@@ -9,7 +9,8 @@ import { Suggestions } from "../components/Suggestion";
 
 export const Home = ()=>{
     const {loading, bkend} = useBackend();
-
+    const {username} = getProfile();
+    console.log(username)
     if(loading){
         return <div>
             Loading please wait
@@ -18,12 +19,12 @@ export const Home = ()=>{
     
     return <div className="bg-black w-full h-full text-white flex justify-between">
         <Navbar/>
-        <div className="w-[50%]">
+        <div className="w-[55%]">
             <Header/>
-            <CreateTweet/>
+            <CreateTweet userName = {username}/>
             <AllTweets userData={bkend}/>
         </div>
-        <div className="w-[30%] border-l border-[#657786] flex flex-col items-center">
+        <div className="w-[32%] border-l border-[#657786] flex flex-col items-center gap-4">
             <Searchbar/>
             <Suggestions/>
         </div>

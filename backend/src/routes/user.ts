@@ -89,20 +89,8 @@ router.get('/bulk', authMiddleware, async(req, res)=>{
 router.get('/profile', authMiddleware, async(req, res)=>{
 
     try{
-        const { email } = req.query;
-        if(!email){
-            return res.status(403).json({
-                msg: "email not found"
-            })
-        }
-        const userTweet = await User.findOne({email});
-        if(!userTweet){
-            return res.status(403).json({
-                msg: "user not found"
-            })
-        }
-        const user = userTweet._id
-        const tweets = await Tweet.find({user}).limit(10);
+        const user = req.userId
+        const tweets = await Tweet.find({user}).populate('user', 'username');
         res.status(200).json({
             tweets
         })
