@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { BACKEND_URL } from "../config";
-import axios from "axios";
+import axios,{ AxiosResponse } from "axios";
 import { useNavigate } from "react-router-dom";
 import { TiTick } from "react-icons/ti";
 
@@ -16,14 +16,13 @@ export const CreateTweet = ()=>{
                 navigate('/signin')
             }
             await axios.post(`${BACKEND_URL}/user/tweet`,{ content },{headers:{
-                    Authorization: `Bearer ${token}`
-                }});
+                Authorization: `Bearer ${token}`
+            }});
             setIsPosted(true);
             setTimeout(() => {
                 setIsPosted(false);
             }, 2000);
             setContent('');
-            
         }
         catch(err){
             console.error(err)

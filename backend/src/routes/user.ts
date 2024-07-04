@@ -58,14 +58,15 @@ router.post("/tweet", authMiddleware, async(req, res)=>{
             msg: "Content required"
         })
     }
-    await Tweet.create({
+    const userTweet = await Tweet.create({
         user: req.userId,
         content,
         likes: []
     })
-
+    const tweetid = userTweet._id;
     res.status(200).json({
-        msg: 'tweet created sucessfully'
+        msg: 'tweet created sucessfully',
+        tweetid
     })
     
 })
