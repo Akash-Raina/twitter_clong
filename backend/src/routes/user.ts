@@ -15,11 +15,12 @@ router.post("/signup", inputMiddleware, userMiddleware, async(req, res)=>{
             email: req.body.email,
             password: req.body.password
         });
-
+        const username = req.body.username;
         const userid = user._id;
         const token = jwt.sign({userid}, process.env.JWT_SECRET as string)
         res.status(200).json({
-            token
+            token,
+            username
         })
     }
     catch(err){
@@ -35,10 +36,12 @@ router.post("/signin", signinMiddleware, async(req, res)=>{
         const user = await User.findOne({
             email: req.body.email
         })
+        const username = user?.username;
         const userid = user?._id;
         const token = jwt.sign({userid}, process.env.JWT_SECRET as string);
         res.status(200).json({
-            token
+            token,
+            username
         })
     }
     catch(err){

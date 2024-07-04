@@ -18,7 +18,9 @@ export const SigninAuth = ({type}:{type:'signin' | 'signup' })=>{
             setLoading(true);
             const res = await axios.post(`${BACKEND_URL}/user/signin`, userData);
             const jwt = res.data.token;
+            const username = res.data.username;
             localStorage.setItem("token", jwt);
+            localStorage.setItem("username",username);
             navigate("/");
         }
         catch(err){

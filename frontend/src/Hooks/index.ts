@@ -48,12 +48,10 @@ export const useBackend = ()=>{
 }
 
 export const getProfile = ()=>{
-    console.log("inside getProfile");
     const navigate = useNavigate();
-    const [username, setUsername] = useState("");
+    const [content, setContent] = useState<bkendType | any >([]);
         useEffect(()=>{
         const hitbackend= async()=>{
-            console.log("inside useeffect")
             const token = localStorage.getItem("token");
             if(!token){
                 navigate("/signin");
@@ -65,10 +63,10 @@ export const getProfile = ()=>{
                 }})
                 if(res && res.data){
                     if(res.data.tweets.length === 0){
-                        setUsername("A")
+                        setContent("")
                     }
                     else{
-                        setUsername(res.data.tweets[0].user.username);
+                        setContent(res.data.tweets)
                     }
                     
                 }
@@ -85,6 +83,6 @@ export const getProfile = ()=>{
     }, [])
 
     return{
-        username
+        content
     }
 }

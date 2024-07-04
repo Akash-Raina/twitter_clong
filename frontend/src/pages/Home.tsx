@@ -11,7 +11,7 @@ import { Suggestions } from "../components/Suggestion";
 export const Home = ()=>{
     const searchInputRef = useRef(null);
     const {loading, bkend} = useBackend();
-    const {username} = getProfile();
+
     if(loading){
         return <div>
             Loading please wait
@@ -26,7 +26,7 @@ export const Home = ()=>{
         
         <div className="w-[55%] ml-[13%] border-x border-[#657786]">
             <Header/>
-            <CreateTweet userName = {username}/>
+            <CreateTweet/>
             <AllTweets userData={bkend}/>
         </div>
         <div className="w-[32%] flex flex-col items-center gap-4">

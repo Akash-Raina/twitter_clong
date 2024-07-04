@@ -17,11 +17,16 @@ export const Navbar: React.FC<NavbarProps> = ({searchInputRef})=>{
             searchInputRef.current.focus();
         }
     }
+
+    const openProfilePage = ()=>{
+        navigate("/profile")
+    }
+
     return <div className="flex flex-col gap-6 items-end pt-3 pr-5 cursor-pointer">
         <FaXTwitter onClick={()=>{window.scrollTo(0, 0);navigate('/')}} size={30}/>
         <MdHomeFilled onClick={()=>{window.scrollTo(0, 0);}} size={30}/>
         <IoSearch onClick={handleSearchClick} size={30}/>
-        <IoPersonOutline size={30}/>
-        <LuPenSquare size={30} />
+        <IoPersonOutline onClick={openProfilePage} size={30}/>
+        
     </div>
 }
