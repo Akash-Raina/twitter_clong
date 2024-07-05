@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { BACKEND_URL } from "../config";
-import axios,{ AxiosResponse } from "axios";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { TiTick } from "react-icons/ti";
 

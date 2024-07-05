@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { getProfile, useBackend } from "../Hooks"
+import { useBackend } from "../Hooks"
 import { AllTweets } from "../components/AllTweets";
 import { CreateTweet } from "../components/CreateTweet";
 import { Header } from "../components/Header";

@@ -52,16 +52,15 @@ router.get('/usertweets', authMiddleware, async(req, res)=>{
     }
 })
 router.put('/like',authMiddleware, async(req, res)=>{
+
     const userId = req.userId;
     const tweetId = sanitize(req.query.tweetId);
-    if(!tweetId){
-        return res.status(401).json({
-            msg: "client side error"
-        })
-    }
+
     const liked = await Like.findOne({
+        user:userId,
         tweet:tweetId
     })
+    
     if(liked){
         return res.status(401).json({
             msg: "already liked"
@@ -78,7 +77,8 @@ router.put('/like',authMiddleware, async(req, res)=>{
         })
     }
     const result = await Tweet.updateOne(
-      { $addToSet: { likes: (userId) } }
+        {_id: tweetId},
+        { $addToSet: { likes: (userId) } }
     );
     if(!result){
         return res.status(403).json({
