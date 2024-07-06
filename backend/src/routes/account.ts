@@ -6,19 +6,19 @@ import sanitize from 'mongo-sanitize';
 router.get("/search", authMiddleware, async(req, res)=>{
     try{
         let { user } = sanitize(req.query);
+        if (!user) {
+            return res.status(400).json({ msg: "User query parameter is required" });
+        }
         const username = user?.toString().toLowerCase()
-        const users = await User.find({username}).limit(10);
-        if(!users){
+        const users = await User.find({ username: new RegExp(username, "i") }).limit(10);
+        if(!users || users.length === 0){
             return res.status(403).json({
                 msg: "username not found"
             })
         }
+        
         res.status(200).json({
-
-            user: users.map(user =>({
-                username: user.username,
-                email : user.email
-            }))
+            users
         })
     }
     catch(err){

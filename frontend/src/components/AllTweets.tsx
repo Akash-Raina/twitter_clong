@@ -17,7 +17,6 @@ interface Tweet {
   _id:string
 }
 export const AllTweets = ({userData}:{userData:Tweet[]})=>{
-  console.log(userData)
   const navigate = useNavigate();
   const [liked, setLiked] = useState([""]);
 

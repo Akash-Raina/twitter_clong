@@ -7,7 +7,7 @@ import { Suggestions } from "../components/Suggestion";
 
 export const Profile = ()=>{
     const searchInputRef = useRef(null);
-    return <div className="bg-black w-full h-full text-white flex justify-between relative">
+    return <div className="bg-black w-full h-screen text-white flex justify-between relative">
         <div className="fixed w-[13%]">
             <Navbar searchInputRef = {searchInputRef}/>
         </div>
